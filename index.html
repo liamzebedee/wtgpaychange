@@ -1,0 +1,247 @@
+<html><head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>WTG Pay change wizard</title>
+  
+  
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    
+      <script type="text/javascript" src="https://fb.me/react-with-addons-0.14.0.js"></script>
+    
+      <script type="text/javascript" src="https://fb.me/react-dom-0.14.0.js"></script>
+    
+  
+
+<script type="text/babel" language="JavaScript 1.7">
+
+
+
+// Written by Liam Edwards-Playne.
+// LED <liam.edwardsplayne@wisetechglobal.com>
+
+var App = React.createClass({
+    getInitialState: function(){
+    	return {};
+    },
+    
+    render: function() {
+        return (
+
+		<form className="ui form">
+			<Question1/>
+		</form>
+        );
+    }
+});
+
+var YesOrNoQuestion = React.createClass({	
+	render: function(){
+		return (<div>
+			<div className="radio">
+				  <label>
+					<input checked={this.props.val === true} onChange={this.props.onChange.bind(this, true)} type="radio"/>
+					Yes
+				  </label>
+				</div>
+				<div className="radio">
+				  <label>
+					<input checked={this.props.val === false} onChange={this.props.onChange.bind(this, false)} type="radio"/>
+					No
+				  </label>
+			</div>
+		</div>);
+	}
+});
+
+var Result = React.createClass({	
+	render: function(){
+		return (<div className="alert alert-success" role="alert">
+			{this.props.message}
+		  </div>);
+	}
+});
+
+var ActionYouMustDo = React.createClass({	
+	render: function(){
+		return (<div className="alert alert-info" role="alert">
+		  <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			{this.props.message}
+		  </div>);
+	}
+});
+
+var Question1 = React.createClass({
+    getInitialState: function(){
+    	return { withinOnboardingWindow: null };
+    },
+	
+	onAnswerChange: function(val){ this.setState({ withinOnboardingWindow: val }) },
+	
+	render: function(){
+		var next;
+		
+		if(this.state.withinOnboardingWindow) {
+			next = <QuestionQualifyForPayChange/>;
+		} else if(this.state.withinOnboardingWindow === false) {
+			next = <QuestionHaveBonusComponent/>;
+		}
+		
+		return (<div>
+			Are you within an onboarding window?
+			<YesOrNoQuestion val={this.state.withinOnboardingWindow} onChange={this.onAnswerChange} />
+			
+			{next}
+		</div>);
+	}
+});
+
+var QuestionQualifyForPayChange = React.createClass({
+    getInitialState: function(){
+    	return { qualifyForPayChange: null };
+    },
+	
+	onAnswerChange: function(val){ this.setState({ qualifyForPayChange: val }) },
+	
+	render: function(){
+		var next;
+		
+		if(this.state.qualifyForPayChange) {
+			next = <QuestionHaveBonusComponent/>;
+		} else if(this.state.qualifyForPayChange === false) {
+			next = <Result message='No Pay Change Plan Necessary. Please monitor your probation expectation plan and ensure it completes'/>;
+		}
+		
+		return (<div>
+			Do you qualify for a pay change at this time?
+			<YesOrNoQuestion val={this.state.qualifyForPayChange} onChange={this.onAnswerChange} />
+			
+			{next}
+		</div>);
+	}
+});
+
+var QuestionHaveBonusComponent  = React.createClass({
+    getInitialState: function(){
+    	return { hasBonusComponent: null };
+    },
+	
+	onAnswerChange: function(val){ this.setState({ hasBonusComponent: val }) },
+	
+	render: function(){
+		var next;
+		
+		if(this.state.hasBonusComponent) {
+			next = <div>
+				<ActionYouMustDo message="Complete your bonus achievement criteria (what you are going to do over the coming nn months in order to receive a bonus)"/>
+				<QuestionAimingForIncrease/>
+			</div>;
+		} else if(this.state.hasBonusComponent === false) {
+			next = <QuestionAimingForIncrease/>;
+		}
+		
+		return (<div>
+			Do you have a bonus component in your current package?
+			<YesOrNoQuestion val={this.state.hasBonusComponent} onChange={this.onAnswerChange} />
+			
+			{next}
+		</div>);
+	}
+});
+
+var QuestionAimingForIncrease = React.createClass({
+    getInitialState: function(){
+    	return { aimingForIncrease: null };
+    },
+	
+	onAnswerChange: function(val){ this.setState({ aimingForIncrease: val }) },
+	
+	render: function(){
+		var next;
+		
+		if(this.state.aimingForIncrease) {
+			next = <div>
+				<QuestionRoleChange/>
+			</div>;
+		} else if(this.state.aimingForIncrease === false) {
+			next = <div>
+				<Question5PleaseExplain/>
+				<SubmitToManager/>
+			</div>;
+		}
+		
+		return (<div>
+			Are you aiming for an increase in your package at the end of this financial year?
+			<YesOrNoQuestion val={this.state.aimingForIncrease} onChange={this.onAnswerChange} />
+			
+			{next}
+		</div>);
+	}
+});
+
+var Question5PleaseExplain  = React.createClass({
+	render: function(){		
+		return (<div>
+			<ActionYouMustDo message="Please explain why no pay increase is appropriate"/>
+		</div>);
+	}
+});
+
+var QuestionRoleChange = React.createClass({
+    getInitialState: function(){
+    	return { changingRole: null };
+    },
+	
+	onAnswerChange: function(val){ this.setState({ changingRole: val }) },
+	
+	render: function(){
+		var next;
+		
+		if(this.state.changingRole) {
+			next = <div>
+				<ActionYouMustDo message="Complete Qualitative Process to determine a target range for your pay increase due to a change in role"/>
+				<SubmitToManager/>
+			</div>;
+		} else if(this.state.changingRole === false) {
+			next = <div>
+				<ActionYouMustDo message="Complete Qualitative Process to determine a target range for your pay increase due to increase in capability. [Add a catch all for other grounds]"/>
+				<SubmitToManager/>
+			</div>;
+		}
+		
+		return (<div>
+			Are you in the process or about to embark on a role change?
+			<YesOrNoQuestion val={this.state.changingRole} onChange={this.onAnswerChange} />
+			
+			{next}
+		</div>);
+	}
+});
+
+var SubmitToManager = React.createClass({
+	render: function(){
+		return <Result message="Submit to your manager"/>;
+	}
+});
+ 
+ReactDOM.render(
+	<App/>,
+    document.getElementById('container')
+);
+
+
+//]]> 
+</script>
+<style>
+font-size: 125%;
+</style>
+</head>
+<body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<div class="container">
+<h1 class='page-title'>
+  WiseTech Pay Change Wizard
+</h1>
+<div id="container"></div>
+</div>
+
+
+</body></html>
