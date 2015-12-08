@@ -198,6 +198,7 @@ var QuestionRoleChange = React.createClass({
 		if(this.state.changingRole) {
 			next = <div>
 				<ActionYouMustDo message="Complete Qualitative Process to determine a target range for your pay increase due to a change in role"/>
+				<ActionYouMustDo message="Complete Qualitative Process to determine a target range for your pay increase due to increase in capability. [Add a catch all for other grounds]"/>
 				<SubmitToManager/>
 			</div>;
 		} else if(this.state.changingRole === false) {
@@ -242,6 +243,4 @@ font-size: 125%;
 </h1>
 <div id="container"></div>
 </div>
-
-
 </body></html>
